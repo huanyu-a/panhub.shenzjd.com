@@ -51,7 +51,6 @@ jobs:
           script: |
             IMAGE="ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):latest"
             CONTAINER="${{ github.event.repository.name }}"
-            ENV_FILE="/opt/1panel/apps/openresty/openresty/www/sites/panhub.shenzjd.com/index/.env"
 
             echo "=== 登录 GHCR ==="
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -64,15 +63,11 @@ jobs:
             sudo docker rm "$CONTAINER" || true
 
             echo "=== 启动新容器 ==="
-            ENV_FLAGS=""
-            if [ -f "$ENV_FILE" ]; then
-              ENV_FLAGS="--env-file $ENV_FILE"
-            fi
             sudo docker run -d \
               --name "$CONTAINER" \
               --restart unless-stopped \
-              $ENV_FLAGS \
               -p 5253:4000 \
+              -v /opt/1panel/apps/openresty/openresty/www/sites/panhub.shenzjd.com/index:/app/data \
               "$IMAGE"
 
             echo "=== 清理旧镜像 ==="
