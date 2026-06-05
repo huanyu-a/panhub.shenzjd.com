@@ -130,8 +130,11 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style>
 @import '~/assets/css/global.css';
+</style>
+
+<style scoped>
 /* 主布局 */
 .layout {
   min-height: 100vh;
